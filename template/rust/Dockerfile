@@ -1,9 +1,9 @@
 FROM openfaas/classic-watchdog:0.18.0 as watchdog
 
 # Build Stage
-FROM rust:1.37.0-alpine AS builder
+FROM arm64v8/rust:1.57 AS builder
 
-RUN rustup target add x86_64-unknown-linux-musl
+RUN rustup target add aarch64-unknown-linux-musl
 
 RUN USER=root
 WORKDIR /usr/src/openfaas
@@ -12,7 +12,7 @@ COPY main ./main
 
 RUN cd main && cargo build --release
 
-RUN cd main && cargo install --target x86_64-unknown-linux-musl --path .
+RUN cd main && cargo install --target aarch64-unknown-linux-musl --path .
 
 # Runner stage
 FROM alpine:3.12 as runner 
